@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data-extraction-rules>
+    <!--
+        Exclude per-number debounce keys (last_text_XXXXX) — they contain
+        callers' phone numbers (PII). Only include the main settings file.
+    -->
+    <cloud-backup>
+        <include domain="sharedpref" path="app_preferences.preferences_pb" />
+    </cloud-backup>
+    <device-transfer>
+        <include domain="sharedpref" path="app_preferences.preferences_pb" />
+    </device-transfer>
+</data-extraction-rules>
