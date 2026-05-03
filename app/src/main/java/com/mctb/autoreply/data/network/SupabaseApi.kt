@@ -95,3 +95,91 @@ data class SupabaseUser(
     val id: String?,
     val email: String?
 )
+
+// ── LeadShield API (Next.js Backend) ──────────────────────────────────────────
+
+/**
+ * LeadShield command center sync API.
+ * 
+ * Deployed at: YOUR_NEXT_JS_URL/api/sync (e.g., https://crm.leadshield.io/api/sync)
+ * 
+ * Authenticates with Bearer token from LEADSHIELD_SYNC_TOKEN.
+ * Token is specific to each customer and generated when they upgrade to OPERATOR tier.
+ */
+interface LeadShieldApi {
+
+    /**
+     * POST /api/sync - Sync leads, messages, and call events to the command center.
+     * 
+     * Request:
+     * - Authorization: Bearer {LEADSHIELD_SYNC_TOKEN}
+     * - Body: LeadShieldSyncPayload with user_id + one or more data types
+     * 
+     * Response on success (200):
+     * {
+     *   "ok": true,
+     *   "summary": {
+     *     "leadsReceived": 1,
+     *     "leadsCreated": 1,
+     *     "leadsUpdated": 0,
+     *     "messagesReceived": 1,
+     *     "messagesInserted": 0,
+     *     "messagesUpdated": 1,
+     *     "callEventsReceived": 1,
+     *     "callEventsInserted": 1,
+     *     "callEventsUpdated": 0
+     *   }
+     * }
+     */
+    @POST("api/sync")
+    suspend fun syncToLeadShield(
+        @Header("Authorization") authorization: String,
+        @Body payload: LeadShieldSyncPayload
+    ): Response<LeadShieldSyncResponse>
+}
+
+/**
+ * Sync payload for LeadShield command center.
+ * 
+ * Fields:
+ * - user_id: Required. UUID of the authenticated Supabase user.
+ * - leads: Optional. List of lead objects to upsert.
+ * - conversation_messages: Optional. List of message objects to sync.
+ * - call_events: Optional. List of call event objects to log.
+ * 
+ * The server accepts flexible payload structure:
+ * - Accepts both camelCase and snake_case field names
+ * - Accepts single object or array for each data type
+ * - Upserts by (user_id, phone_number) for leads
+ * - Upserts by (user_id, phone_number, sent_at) for messages
+ * - Inserts call events with no deduplication
+ */
+data class LeadShieldSyncPayload(
+    val user_id: String,
+    val leads: List<Map<String, Any?>>? = null,
+    val conversation_messages: List<Map<String, Any?>>? = null,
+    val call_events: List<Map<String, Any?>>? = null
+)
+
+/**
+ * Response from LeadShield sync endpoint.
+ * 
+ * ok: true if all operations succeeded
+ * summary: Stats on what was received and upserted
+ */
+data class LeadShieldSyncResponse(
+    val ok: Boolean,
+    val summary: LeadShieldSyncSummary?
+)
+
+data class LeadShieldSyncSummary(
+    val leadsReceived: Int = 0,
+    val leadsCreated: Int = 0,
+    val leadsUpdated: Int = 0,
+    val messagesReceived: Int = 0,
+    val messagesInserted: Int = 0,
+    val messagesUpdated: Int = 0,
+    val callEventsReceived: Int = 0,
+    val callEventsInserted: Int = 0,
+    val callEventsUpdated: Int = 0
+)

@@ -450,6 +450,54 @@ class AppPreferences(private val context: Context) {
     suspend fun getSupabaseUserIdSync(): String =
         context.dataStore.data.map { it[KEY_SUPABASE_USER_ID] ?: "" }.first()
 
+    // ── LeadShield Web Sync ───────────────────────────────────────────────────
+    //
+    // Token generated when customer upgrades to OPERATOR tier or above.
+    // Used to authenticate sync requests to the Next.js command center.
+    // Token is unique per customer and should be stored securely.
+
+    private val KEY_LEADSHIELD_SYNC_TOKEN = stringPreferencesKey("leadshield_sync_token")
+    private val KEY_LEADSHIELD_SYNC_URL = stringPreferencesKey("leadshield_sync_url")
+
+    val leadShieldSyncToken: Flow<String> = context.dataStore.data.map { it[KEY_LEADSHIELD_SYNC_TOKEN] ?: "" }
+    val leadShieldSyncUrl: Flow<String> = context.dataStore.data.map { it[KEY_LEADSHIELD_SYNC_URL] ?: "" }
+
+    /**
+     * Save LeadShield sync credentials.
+     * Called when customer upgrades to OPERATOR tier and gets their sync token.
+     * 
+     * @param token Unique Bearer token for this customer (provided by CRM backend)
+     * @param url Base URL of the Next.js CRM backend (e.g., https://crm.leadshield.io)
+     */
+    suspend fun saveLeadShieldSyncCredentials(token: String, url: String) {
+        context.dataStore.edit { prefs ->
+            prefs[KEY_LEADSHIELD_SYNC_TOKEN] = token
+            prefs[KEY_LEADSHIELD_SYNC_URL] = url
+        }
+    }
+
+    /**
+     * Clear LeadShield sync credentials (e.g., when customer downgrades).
+     */
+    suspend fun clearLeadShieldSyncCredentials() {
+        context.dataStore.edit { prefs ->
+            prefs[KEY_LEADSHIELD_SYNC_TOKEN] = ""
+            prefs[KEY_LEADSHIELD_SYNC_URL] = ""
+        }
+    }
+
+    /**
+     * Get sync token synchronously (for use in receivers/services).
+     */
+    suspend fun getLeadShieldSyncTokenSync(): String =
+        context.dataStore.data.map { it[KEY_LEADSHIELD_SYNC_TOKEN] ?: "" }.first()
+
+    /**
+     * Get sync URL synchronously (for use in receivers/services).
+     */
+    suspend fun getLeadShieldSyncUrlSync(): String =
+        context.dataStore.data.map { it[KEY_LEADSHIELD_SYNC_URL] ?: "" }.first()
+
     // ── Business Profile (Operator tier AI features) ─────────────────────────
 
     val businessName: Flow<String> = context.dataStore.data.map { it[KEY_BUSINESS_NAME] ?: "" }

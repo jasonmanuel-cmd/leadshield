@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.telephony.TelephonyManager
 import android.util.Log
+import com.mctb.autoreply.data.LeadShieldSyncManager
 import com.mctb.autoreply.util.CallStateMachine
 import com.mctb.autoreply.util.SmsHandler
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,6 +30,9 @@ class CallReceiver : BroadcastReceiver() {
     @Inject
     lateinit var smsHandler: SmsHandler
 
+    @Inject
+    lateinit var leadShieldSync: LeadShieldSyncManager
+
     companion object {
         private const val TAG = "CallReceiver"
 
@@ -51,13 +55,17 @@ class CallReceiver : BroadcastReceiver() {
         try {
             receiverScope.launch {
                 try {
+                    // Send auto-reply SMS (existing behavior)
                     smsHandler.processMissedCall(phoneNumber)
+
+                    // Sync missed call to LeadShield command center if customer has operator tier
+                    leadShieldSync.syncMissedCallAsync(phoneNumber, null)
                 } finally {
                     pendingResult.finish()
                 }
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Error triggering SmsHandler", e)
+            Log.e(TAG, "Error triggering SmsHandler or sync", e)
             pendingResult.finish()
         }
     }

@@ -6,9 +6,11 @@ import com.mctb.autoreply.data.network.LeadShieldSyncPayload
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
+import java.time.Instant
 
 private const val TAG = "LeadShieldSyncManager"
 
@@ -52,8 +54,9 @@ class LeadShieldSyncManager @Inject constructor(
             return
         }
 
-        val userId = supabaseAuthManager.getCurrentUserIdSync()
-        if (userId.isBlank()) {
+        val currentUser = supabaseAuthManager.getCurrentUser()
+        val userId = currentUser?.second
+        if (userId.isNullOrBlank()) {
             Log.w(TAG, "Cannot sync: No authenticated user")
             return
         }
@@ -108,8 +111,9 @@ class LeadShieldSyncManager @Inject constructor(
         val syncToken = prefs.getLeadShieldSyncTokenSync()
         if (syncToken.isBlank()) return
 
-        val userId = supabaseAuthManager.getCurrentUserIdSync()
-        if (userId.isBlank()) {
+        val currentUser = supabaseAuthManager.getCurrentUser()
+        val userId = currentUser?.second
+        if (userId.isNullOrBlank()) {
             Log.w(TAG, "Cannot sync lead: No authenticated user")
             return
         }
@@ -161,8 +165,9 @@ class LeadShieldSyncManager @Inject constructor(
         val syncToken = prefs.getLeadShieldSyncTokenSync()
         if (syncToken.isBlank()) return
 
-        val userId = supabaseAuthManager.getCurrentUserIdSync()
-        if (userId.isBlank()) return
+        val currentUser = supabaseAuthManager.getCurrentUser()
+        val userId = currentUser?.second
+        if (userId.isNullOrBlank()) return
 
         try {
             val message = mapOf(
@@ -205,8 +210,9 @@ class LeadShieldSyncManager @Inject constructor(
         val syncToken = prefs.getLeadShieldSyncTokenSync()
         if (syncToken.isBlank()) return
 
-        val userId = supabaseAuthManager.getCurrentUserIdSync()
-        if (userId.isBlank()) return
+        val currentUser = supabaseAuthManager.getCurrentUser()
+        val userId = currentUser?.second
+        if (userId.isNullOrBlank()) return
 
         try {
             val payload = LeadShieldSyncPayload(
@@ -278,6 +284,6 @@ class LeadShieldSyncManager @Inject constructor(
     }
 
     private fun getCurrentIsoTimestamp(): String {
-        return java.time.Instant.now().toString()
+        return Instant.now().toString()
     }
 }
