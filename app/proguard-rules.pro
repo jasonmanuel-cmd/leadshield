@@ -39,10 +39,10 @@
 }
 
 # Keep app-specific classes
--keep class com.mctb.autoreply.data.** { *; }
--keep class com.mctb.autoreply.receiver.** { *; }
--keep class com.mctb.autoreply.service.** { *; }
--keep class com.mctb.autoreply.util.** { *; }
+-keep class com.leadshield.app.data.** { *; }
+-keep class com.leadshield.app.receiver.** { *; }
+-keep class com.leadshield.app.service.** { *; }
+-keep class com.leadshield.app.util.** { *; }
 
 # Keep BroadcastReceiver classes
 -keep public class * extends android.content.BroadcastReceiver
@@ -51,7 +51,7 @@
 -keep public class * extends android.app.Service
 
 # Keep navigation and sealed classes
--keep class com.mctb.autoreply.ui.navigation.** { *; }
+-keep class com.leadshield.app.ui.navigation.** { *; }
 
 # Enable optimizations but keep debug info
 -keepattributes SourceFile,LineNumberTable

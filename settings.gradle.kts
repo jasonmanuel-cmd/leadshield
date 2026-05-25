@@ -20,5 +20,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "MissedCallAutoReply"
+rootProject.name = "LeadShield"
 include(":app")

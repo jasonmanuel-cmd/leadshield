@@ -9,11 +9,11 @@ plugins {
 }
 
 android {
-    namespace = "com.mctb.autoreply"
+    namespace = "com.leadshield.app"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.mctb.autoreply"
+        applicationId = "com.leadshield.app"
         minSdk = 26
         targetSdk = 35
         versionCode = 2
@@ -83,7 +83,7 @@ android {
     productFlavors {
         create("free") {
             dimension = "subscription"
-            // Canonical Play Store package: com.mctb.autoreply
+            // Canonical Play Store package: com.leadshield.app
             versionNameSuffix = ""
             buildConfigField("int", "SUBSCRIPTION_TIER", "0")
             buildConfigField("int", "MAX_TEXTS", "10")   // 10 auto-replies / month

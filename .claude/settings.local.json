@@ -11,7 +11,10 @@
       "Bash(./gradlew build:*)",
       "Bash(./gradlew assembleRelease:*)",
       "Bash(cat:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(where java *)",
+      "PowerShell(Get-Command java -ErrorAction SilentlyContinue)",
+      "PowerShell(if \\(-not $?\\) { \"not found\" })"
     ]
   }
 }
