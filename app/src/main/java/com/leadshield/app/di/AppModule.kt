@@ -3,6 +3,7 @@ package com.leadshield.app.di
 import android.content.Context
 import com.leadshield.app.BuildConfig
 import com.leadshield.app.data.*
+import com.leadshield.app.data.network.LeadShieldApi
 import com.leadshield.app.data.network.SupabaseAuthApi
 import com.leadshield.app.data.network.SupabaseRestApi
 import com.leadshield.app.service.CipherService
@@ -69,6 +70,17 @@ object AppModule {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(SupabaseAuthApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideLeadShieldApi(client: OkHttpClient): LeadShieldApi {
+        return Retrofit.Builder()
+            .baseUrl("https://leadshield-crm.vercel.app/")
+            .client(client)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(LeadShieldApi::class.java)
     }
 
     @Provides
