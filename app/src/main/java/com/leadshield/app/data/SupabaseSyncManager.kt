@@ -1,6 +1,7 @@
 package com.leadshield.app.data
 
 import android.util.Log
+import com.leadshield.app.BuildConfig
 import com.leadshield.app.data.network.SupabaseCallEventDto
 import com.leadshield.app.data.network.SupabaseLeadDto
 import com.leadshield.app.data.network.SupabaseMessageDto
@@ -9,7 +10,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 private const val TAG = "SupabaseSyncManager"
-private const val ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV4cGNpbndkeHhsZmdrdXhwaXJxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc2ODc2MDUsImV4cCI6MjA5MzI2MzYwNX0.O3N5yhqVwhsmgzuBiJyTS2s7BeAtV7gDYhee0my7C6M"
+private val ANON_KEY = BuildConfig.SUPABASE_ANON_KEY
 
 @Singleton
 class SupabaseSyncManager @Inject constructor(
