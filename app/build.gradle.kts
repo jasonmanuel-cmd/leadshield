@@ -29,6 +29,7 @@ android {
         buildConfigField("String", "GEMINI_API_KEY", "\"${providers.gradleProperty("GEMINI_API_KEY").getOrElse("")}\"")
         buildConfigField("String", "NEON_DATA_API_URL", "\"${providers.gradleProperty("NEON_DATA_API_URL").getOrElse("")}\"")
         buildConfigField("String", "NEON_API_KEY", "\"${providers.gradleProperty("NEON_API_KEY").getOrElse("")}\"")
+        buildConfigField("String", "SUPABASE_ANON_KEY", "\"${providers.gradleProperty("SUPABASE_ANON_KEY").getOrElse("")}\"")
         buildConfigField("String", "MASTER_GOD_MODE_PASSWORD", "\"${providers.gradleProperty("MASTER_GOD_MODE_PASSWORD").getOrElse("")}\"")
         buildConfigField("String", "BILLING_VERIFY_URL", "\"${providers.gradleProperty("BILLING_VERIFY_URL").getOrElse("")}\"")
         buildConfigField("boolean", "ENABLE_STRICT_BILLING_VERIFICATION", "false")
